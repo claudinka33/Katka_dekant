@@ -175,6 +175,8 @@ legend{font-weight:600;font-size:14px;margin-bottom:8px;padding:0}
 .recap li span:last-child{white-space:nowrap}
 .recap .tot{font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
 .done-box .btn{margin-top:22px}
+.demolink{margin-top:14px;font-size:14px;color:var(--ink-2);text-align:center;background:#FFF1B8;border-radius:var(--r-s);padding:10px 12px}
+.demolink a{color:#5A3F00;font-weight:700;text-underline-offset:3px}
 
 /* mobile bar */
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:none;align-items:center;justify-content:space-between;gap:14px;z-index:10}
@@ -240,7 +242,7 @@ footer a{color:inherit}
     </div>
     <div class="hero-grid">
       <div>
-        <h1>Naroči dekant</h1>
+        <h1>Naroči dekant parfuma</h1>
         <p class="lead">Parfumi iz Katkine kolekcije, pretočeni v 5, 10 ali 20 ml. Izbereš, vpišeš naslov, Katka spakira in pošlje.</p>
       </div>
       <div class="sizes" id="heroSizes" aria-label="Velikosti dekantov"></div>
@@ -392,6 +394,13 @@ footer a{color:inherit}
   var SHIP = {SI:3.9, HR:8.9};
   var SIZES = [5,10,20];
 
+  /* povezava z admin demom: dodani parfumi in oddana naročila živijo v brskalniku */
+  function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  load('kb_extra',[]).forEach(function(p){P.unshift(p);});
+  var SOLD={};
+  load('kb_orders',[]).forEach(function(o){o.items.forEach(function(i){SOLD[i.id]=(SOLD[i.id]||0)+i.size*i.qty;});});
+
   var S = {step:1, who:'vse', fam:null, q:'', sel:{}, cart:{}, country:'SI', notified:{}, last:null};
   P.forEach(function(p){ S.sel[p.id]=10; });
 
@@ -402,7 +411,7 @@ footer a{color:inherit}
   function byId(id){for(var i=0;i<P.length;i++) if(P[i].id===id) return P[i];}
   function plural(n){var m=n%100; if(m===1)return 'dekant'; if(m===2)return 'dekanta'; if(m===3||m===4)return 'dekanti'; return 'dekantov';}
   function mlInCart(id){var t=0; SIZES.forEach(function(s){t+=(S.cart[id+'|'+s]||0)*s;}); return t;}
-  function remaining(p){return p.stock-mlInCart(p.id);}
+  function remaining(p){return p.stock-(SOLD[p.id]||0)-mlInCart(p.id);}
   function cartLines(){
     return Object.keys(S.cart).filter(function(k){return S.cart[k]>0;}).map(function(k){
       var a=k.split('|'), p=byId(a[0]), s=+a[1];
@@ -474,7 +483,7 @@ footer a{color:inherit}
       return;
     }
     $('list').innerHTML=items.map(function(p){
-      var rem=remaining(p), out=p.stock<=0;
+      var rem=remaining(p), out=(p.stock-(SOLD[p.id]||0))<=0;
       var sel=S.sel[p.id];
       if(!out&&sel>rem){ sel=null; for(var i=SIZES.length-1;i>=0;i--){ if(SIZES[i]<=rem){sel=SIZES[i];break;} } S.sel[p.id]=sel; }
       var drawSize=sel||5;
@@ -558,6 +567,7 @@ footer a{color:inherit}
     h+='<li class="tot"><span>Skupaj</span><span>'+eur(o.total)+'</span></li></ul>';
     h+='<p class="b" style="margin-top:10px">'+esc(o.name)+', '+esc(o.street)+', '+esc(o.zip)+' '+esc(o.city)+'</p></div>';
     h+='<button class="btn ghost" type="button" data-new>Začni novo naročilo</button>';
+    h+='<p class="demolink">Samo v demu: <a href="admin.html">poglej, kako to naročilo vidi Katka v adminu</a></p>';
     $('done').innerHTML=h;
   }
 
@@ -644,6 +654,12 @@ footer a{color:inherit}
     var o={no:'KB-'+(2000+Math.floor(Math.random()*7999)), email:$('email').value.trim(), name:$('name').value.trim(),
       street:$('street').value.trim(), zip:$('zip').value.trim(), city:$('city').value.trim(),
       pay:document.querySelector('input[name="pay"]:checked').value, lines:t.lines, ship:t.ship, total:t.total};
+    var saved=load('kb_orders',[]);
+    saved.unshift({no:o.no,date:Date.now(),name:o.name,email:o.email,phone:$('phone').value.trim(),street:o.street,zip:o.zip,city:o.city,
+      country:S.country,pay:o.pay,note:$('note').value.trim(),status:'nova',ship:o.ship,total:o.total,
+      items:t.lines.map(function(x){return {id:x.p.id,name:x.p.name,brand:x.p.brand,size:x.size,qty:x.qty,price:x.p.prices[x.size]};})});
+    save('kb_orders',saved);
+    t.lines.forEach(function(x){SOLD[x.p.id]=(SOLD[x.p.id]||0)+x.size*x.qty;});
     renderDone(o);
     /* V pravi verziji se naročilo tukaj pošlje na strežnik (baza + email Katki in stranki). */
     go(3);

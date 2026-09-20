@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin | Dekanti</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F8FD; --card:#FFFFFF; --ink:#0B1B33; --ink-2:#4B5D78;
+  --blue:#3F6DCF; --blue-deep:#2C52A6; --sky:#D9E6F6; --mist:#E2ECF9; --line:#CBD9EC;
+  --ok:#0B7A5C; --err:#B3261E; --warn:#8A4B00;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Hanken Grotesk","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --r-s:10px; --r-m:16px; --r-l:22px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;line-height:1.1}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+
+.demo{background:#FFF1B8;color:#5A3F00;font-size:13px;text-align:center;padding:7px 16px}
+.demo button{background:none;border:0;padding:0;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.topbar{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px}
+.topbar-in{max-width:920px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.topbar h1{font-size:20px;font-weight:700}
+.topbar h1 span{color:#9FB6DA;font-weight:500}
+.topbar a{color:#fff;font-size:14px;font-weight:600;text-underline-offset:3px;white-space:nowrap}
+
+.wrap{max-width:920px;margin:0 auto;padding:18px 16px 80px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:12px 14px}
+.stat b{display:block;font-family:var(--display);font-size:28px;line-height:1.1;letter-spacing:-.02em}
+.stat span{font-size:13px;color:var(--ink-2)}
+.stat.wide{grid-column:1 / -1}
+.stat.hot{background:var(--sky);border-color:var(--sky)}
+
+.tabs{display:flex;gap:4px;margin:20px 0 16px;border-bottom:1.5px solid var(--line)}
+.tab{background:none;border:0;padding:10px 14px;font-weight:600;color:var(--ink-2);border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--blue)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 6px;margin:0 -16px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);padding:7px 13px;border-radius:99px;font-size:14px;font-weight:500}
+.chip b{font-weight:700;margin-left:4px;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip[aria-pressed="true"] b{color:#BFD0EA}
+
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn{border:0;border-radius:var(--r-s);padding:11px 16px;font-weight:700;font-size:15px;background:var(--ink);color:#fff}
+.btn:hover{background:#142a4d}
+.btn.blue{background:var(--blue)} .btn.blue:hover{background:var(--blue-deep)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line)} .btn.ghost:hover{background:var(--mist)}
+.btn.sm{padding:8px 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.orders{display:grid;gap:10px}
+.o{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:16px}
+.o.new{border-color:#E5C860;box-shadow:inset 4px 0 0 #E5C860}
+.o-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.o-h .no{font-family:var(--display);font-weight:700;font-size:18px}
+.o-h .dt{font-size:13px;color:var(--ink-2)}
+.o-h .pill{margin-left:auto}
+.pill{padding:3px 10px;border-radius:99px;font-size:13px;font-weight:600;white-space:nowrap}
+.s-nova{background:#FFF1B8;color:#6B4A00}
+.s-placana{background:#D6F0E6;color:#0B5C45}
+.s-spakirana{background:var(--sky);color:#1F3F85}
+.s-poslana{background:#E7EAF0;color:#4B5D78}
+.fresh{background:var(--err);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px}
+.who{margin-top:8px;font-weight:600}
+.who span{font-weight:400;color:var(--ink-2)}
+.items{list-style:none;margin:8px 0 0;padding:0;font-size:15px;display:grid;gap:2px}
+.items li{display:flex;justify-content:space-between;gap:12px}
+.items li span:last-child{white-space:nowrap;color:var(--ink-2)}
+.o-f{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--mist);flex-wrap:wrap}
+.o-f .tot{font-family:var(--display);font-weight:700;font-size:20px}
+.o-f .pay{font-size:13px;color:var(--ink-2);display:block;font-family:var(--body);font-weight:400}
+details{margin-top:10px}
+summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--blue-deep);list-style:none;display:inline-block}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" ▾"}
+details[open] summary::after{content:" ▴"}
+.addr{background:var(--paper);border-radius:var(--r-s);padding:12px 14px;margin-top:8px;font-size:15px;display:grid;gap:8px}
+.addr a{color:var(--blue-deep)}
+.addr .note{font-style:italic;color:var(--ink-2)}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--r-l);padding:28px 20px;text-align:center;color:var(--ink-2)}
+
+/* stock */
+.sortbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:14px;color:var(--ink-2)}
+.sortbar select{padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-s);background:var(--card);font-size:15px}
+.stock{display:grid;gap:10px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:14px 16px;display:grid;grid-template-columns:14px 1fr auto;gap:4px 12px;align-items:center}
+.dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(11,27,51,.15)}
+.st .n{font-weight:600;line-height:1.25}
+.st .n span{display:block;font-weight:400;font-size:13px;color:var(--ink-2)}
+.st .ml{font-family:var(--display);font-weight:700;font-size:18px;text-align:right;white-space:nowrap}
+.st .ml small{font-family:var(--body);font-weight:400;font-size:13px;color:var(--ink-2)}
+.bar{grid-column:1 / -1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:99px}
+.st.low .bar i{background:#D18A00}
+.st.out .bar i{background:var(--err)}
+.st .sub{grid-column:1 / -1;display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-2);margin-top:4px;flex-wrap:wrap}
+.flag{font-weight:600}
+.st.low .flag{color:var(--warn)} .st.out .flag{color:var(--err)}
+.st .n .tagnew{display:inline;font-style:normal;background:#D6F0E6;color:#0B5C45;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px}
+
+/* add form */
+.form{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:20px 16px;display:grid;gap:16px}
+.form h2{font-size:24px;font-weight:700}
+.form .sub{color:var(--ink-2);margin-top:-8px;font-size:15px}
+.row{display:grid;gap:16px}
+.f label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.f label small{font-weight:400;color:var(--ink-2)}
+.f input,.f select,.f textarea{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:var(--r-s);background:#fff;font-size:16px}
+.f input[type=color]{padding:4px;height:48px}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(63,109,207,.22)}
+.f.bad input{border-color:var(--err)}
+.msg{color:var(--err);font-size:13px;margin-top:5px;display:none}
+.f.bad .msg{display:block}
+.calc{background:var(--paper);border-radius:var(--r-s);padding:12px 14px;font-size:14px;color:var(--ink-2)}
+.calc b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:99px;font-weight:600;font-size:15px;z-index:20;max-width:calc(100% - 32px);text-align:center}
+
+#print{display:none}
+@media (min-width:640px){
+  .wrap{padding:24px 24px 80px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .stat.wide{grid-column:auto}
+  .row.two{grid-template-columns:1fr 1fr}
+  .row.three{grid-template-columns:repeat(3,1fr)}
+  .row.four{grid-template-columns:repeat(4,1fr)}
+  .form{padding:26px}
+}
+@media print{
+  body>*:not(#print){display:none!important}
+  #print{display:block;font-family:var(--body);color:#000;padding:0}
+  #print h1{font-size:20pt;margin-bottom:4mm}
+  .pk{border:1px solid #999;border-radius:3mm;padding:4mm 5mm;margin-bottom:4mm;break-inside:avoid;display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+  .pk h2{font-size:13pt;margin-bottom:1mm}
+  .pk ul{list-style:none;margin:0;padding:0}
+  .pk li::before{content:"☐ "}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="demo">Demo admina. Naročila in stranke so izmišljeni, brez prave prijave. <button type="button" id="reset">Ponastavi demo</button></div>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <h1>Dekanti <span>admin</span></h1>
+    <a href="index.html">Odpri naročilnico</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" id="stats" aria-label="Pregled"></section>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="orders" aria-selected="true">Naročila</button>
+    <button class="tab" role="tab" data-tab="stock" aria-selected="false">Zaloga</button>
+    <button class="tab" role="tab" data-tab="add" aria-selected="false">Dodaj parfum</button>
+  </div>
+
+  <section id="tab-orders">
+    <div class="chips" id="chips" role="group" aria-label="Status naročil"></div>
+    <div class="rowbtn"><button class="btn ghost sm" type="button" id="printBtn"></button></div>
+    <div class="orders" id="orders"></div>
+  </section>
+
+  <section id="tab-stock" hidden>
+    <div class="sortbar"><label for="sort">Razvrsti</label>
+      <select id="sort"><option value="low">Najmanj zaloge najprej</option><option value="sold">Najbolj prodajani</option><option value="name">Po imenu</option></select>
+    </div>
+    <div class="stock" id="stock"></div>
+  </section>
+
+  <section id="tab-add" hidden>
+    <form class="form" id="addForm" novalidate>
+      <h2>Dodaj parfum</h2>
+      <p class="sub">Ko shraniš, se parfum takoj pokaže v naročilnici in v zalogi.</p>
+      <div class="row two">
+        <div class="f" data-f="brand"><label for="brand">Znamka</label><input id="brand" placeholder="npr. Maison Francis Kurkdjian"><p class="msg">Vpiši znamko.</p></div>
+        <div class="f" data-f="name"><label for="name">Ime parfuma</label><input id="name" placeholder="npr. Aqua Celestia"><p class="msg">Vpiši ime parfuma.</p></div>
+      </div>
+      <div class="row three">
+        <div class="f"><label for="who">Za koga</label><select id="who"><option value="unisex">Unisex</option><option value="zenski">Ženski</option><option value="moski">Moški</option></select></div>
+        <div class="f"><label for="fam">Vonj</label><select id="fam"><option value="svezi">Sveži</option><option value="sladki">Sladki</option><option value="cvetlicni">Cvetlični</option><option value="lesni">Lesni</option></select></div>
+        <div class="f"><label for="color">Barva tekočine</label><input id="color" type="color" value="#BFE3EE"></div>
+      </div>
+      <div class="f"><label for="notes">Note <small>(po želji)</small></label><input id="notes" placeholder="npr. limeta, meta, mošus"></div>
+      <div class="f"><label for="wear">Kam ga nosiš <small>(po želji)</small></label><input id="wear" placeholder="npr. Poletni dnevi, morje, bela srajca."></div>
+      <div class="row four">
+        <div class="f" data-f="bottle"><label for="bottle">Flaška, ml</label><input id="bottle" inputmode="numeric" value="100"><p class="msg">Vpiši velikost flaške v ml.</p></div>
+        <div class="f" data-f="p5"><label for="p5">Cena 5 ml, €</label><input id="p5" inputmode="decimal"><p class="msg">Vpiši ceno.</p></div>
+        <div class="f" data-f="p10"><label for="p10">Cena 10 ml, €</label><input id="p10" inputmode="decimal"><p class="msg">Vpiši ceno.</p></div>
+        <div class="f" data-f="p20"><label for="p20">Cena 20 ml, €</label><input id="p20" inputmode="decimal"><p class="msg">Vpiši ceno.</p></div>
+      </div>
+      <div class="f"><label for="cost">Koliko si plačala flaško, € <small>(po želji, vidiš samo ti)</small></label><input id="cost" inputmode="decimal" placeholder="npr. 215"></div>
+      <div class="calc" id="calc">Vpiši ceno flaške in cene dekantov, pa ti izračunam, koliko ti ostane, ko je flaška razprodana.</div>
+      <button class="btn blue" type="submit">Shrani parfum</button>
+    </form>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div id="print"></div>
+
+<script>
+(function(){
+  /* ---------- data (demo, isti parfumi kot v naročilnici) ---------- */
+  var P = [
+    {id:'ldbs', brand:'Kilian', name:"Love, Don't Be Shy", color:'#F3B6C8', prices:{5:19,10:36,20:68}, stock:85, bottle:100, waiting:0},
+    {id:'imag', brand:'Louis Vuitton', name:'Imagination', color:'#BFE3EE', prices:{5:18,10:34,20:64}, stock:70, bottle:100, waiting:0},
+    {id:'fleur', brand:'Ex Nihilo', name:'Fleur Narcotique', color:'#F6D7DE', prices:{5:17,10:32,20:60}, stock:60, bottle:100, waiting:0},
+    {id:'inle', brand:'Memo Paris', name:'Inlé', color:'#F4E3A6', prices:{5:15,10:28,20:52}, stock:15, bottle:75, waiting:0},
+    {id:'tor21', brand:'Xerjoff', name:'Torino21', color:'#CDEBC4', prices:{5:14,10:26,20:48}, stock:90, bottle:100, waiting:0},
+    {id:'angel', brand:'Kilian', name:"Angels' Share", color:'#D9974A', prices:{5:16,10:30,20:56}, stock:0, bottle:50, waiting:7},
+    {id:'bir', brand:'Valentino', name:'Born in Roma Donna', color:'#F2C2B8', prices:{5:8,10:14,20:26}, stock:75, bottle:100, waiting:0},
+    {id:'sauv', brand:'Dior', name:'Sauvage', color:'#C9D6F2', prices:{5:7,10:13,20:24}, stock:100, bottle:200, waiting:0},
+    {id:'bois', brand:'Essential Parfums', name:'Bois Impérial', color:'#DCCFA8', prices:{5:7,10:12,20:22}, stock:80, bottle:100, waiting:0}
+  ];
+  var SHIP={SI:3.9,HR:8.9};
+  var ST={nova:'Novo',placana:'Plačano',spakirana:'Spakirano',poslana:'Poslano'};
+  var ORDER=['nova','placana','spakirana','poslana'];
+
+  function ago(d,h,m){var t=new Date();t.setDate(t.getDate()-d);t.setHours(h,m,0,0);return t.getTime();}
+  var SEED=[
+    {no:'KB-4851',date:ago(0,9,12),name:'Ana Novak',email:'ana.novak@primer.si',phone:'041 555 012',street:'Cvetlična ulica 12',zip:'1000',city:'Ljubljana',country:'SI',pay:'Nakazilo na račun',note:'',items:[['ldbs',20,1],['inle',10,1]],status:'nova'},
+    {no:'KB-4850',date:ago(0,7,48),name:'Marko Petek',email:'marko.petek@primer.si',phone:'031 555 344',street:'Trg svobode 4',zip:'3000',city:'Celje',country:'SI',pay:'Po povzetju',note:'Prosim pokličite pred dostavo.',items:[['sauv',10,1],['imag',5,1]],status:'nova'},
+    {no:'KB-4849',date:ago(1,21,5),name:'Ivana Kovač',email:'ivana.kovac@primer.hr',phone:'+385 91 555 210',street:'Ilica 118',zip:'10000',city:'Zagreb',country:'HR',pay:'Nakazilo na račun',note:'',items:[['fleur',10,1]],status:'placana'},
+    {no:'KB-4848',date:ago(1,18,30),name:'Tina Zupan',email:'tina.zupan@primer.si',phone:'040 555 781',street:'Gosposvetska cesta 27',zip:'2000',city:'Maribor',country:'SI',pay:'Nakazilo na račun',note:'Darilo, brez računa v paketu.',items:[['tor21',20,1],['bir',5,2]],status:'placana'},
+    {no:'KB-4847',date:ago(2,13,15),name:'Luka Horvat',email:'luka.horvat@primer.si',phone:'051 555 909',street:'Kidričeva ulica 9',zip:'4000',city:'Kranj',country:'SI',pay:'Po povzetju',note:'',items:[['bois',10,1],['sauv',20,1]],status:'spakirana'},
+    {no:'KB-4846',date:ago(3,10,2),name:'Sara Kralj',email:'sara.kralj@primer.si',phone:'041 555 633',street:'Obala 55',zip:'6320',city:'Portorož',country:'SI',pay:'Nakazilo na račun',note:'',items:[['ldbs',10,1]],status:'poslana'},
+    {no:'KB-4845',date:ago(4,16,40),name:'Nejc Vidmar',email:'nejc.vidmar@primer.si',phone:'030 555 118',street:'Partizanska cesta 3',zip:'8000',city:'Novo mesto',country:'SI',pay:'Nakazilo na račun',note:'',items:[['imag',20,1],['tor21',5,1]],status:'poslana'},
+    {no:'KB-4844',date:ago(6,12,20),name:'Maja Breznik',email:'maja.breznik@primer.si',phone:'041 555 470',street:'Prešernova ulica 21',zip:'3320',city:'Velenje',country:'SI',pay:'Po povzetju',note:'',items:[['angel',10,1],['fleur',5,1]],status:'poslana'},
+    {no:'KB-4843',date:ago(9,19,55),name:'Petra Oblak',email:'petra.oblak@primer.si',phone:'031 555 826',street:'Cankarjeva ulica 7',zip:'5000',city:'Nova Gorica',country:'SI',pay:'Nakazilo na račun',note:'',items:[['angel',20,1],['ldbs',5,1]],status:'poslana'}
+  ];
+
+  /* ---------- storage ---------- */
+  function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  var extra=load('kb_extra',[]);
+  var localOrders=load('kb_orders',[]);
+  var statusMap=load('kb_status',{});
+  extra.forEach(function(p){P.push(p);});
+
+  function byId(id){for(var i=0;i<P.length;i++) if(P[i].id===id) return P[i]; return null;}
+  function eur(n){return n.toFixed(2).replace('.',',')+' €';}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function fmtDate(t){var d=new Date(t),n=new Date();var hm=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    if(d.toDateString()===n.toDateString()) return 'danes ob '+hm;
+    var y=new Date(n);y.setDate(n.getDate()-1); if(d.toDateString()===y.toDateString()) return 'včeraj ob '+hm;
+    return d.getDate()+'. '+(d.getMonth()+1)+'. ob '+hm;}
+
+  function allOrders(){
+    var seed=SEED.map(function(o){
+      var items=o.items.map(function(a){var p=byId(a[0]);return {id:a[0],name:p.name,brand:p.brand,size:a[1],qty:a[2],price:p.prices[a[1]]};});
+      var sub=items.reduce(function(t,i){return t+i.qty*i.price;},0);
+      return Object.assign({},o,{items:items,ship:SHIP[o.country],total:sub+SHIP[o.country],local:false});
+    });
+    var loc=localOrders.map(function(o){return Object.assign({},o,{local:true});});
+    return loc.concat(seed).map(function(o){o.status=statusMap[o.no]||o.status||'nova';return o;})
+      .sort(function(a,b){return b.date-a.date;});
+  }
+  function nextStatus(o){
+    if(o.status==='nova') return o.pay==='Po povzetju'?'spakirana':'placana';
+    if(o.status==='placana') return 'spakirana';
+    if(o.status==='spakirana') return 'poslana';
+    return null;
+  }
+  function toPack(o){return o.status==='placana'||(o.status==='nova'&&o.pay==='Po povzetju');}
+  var ACTION={placana:'Označi kot plačano',spakirana:'Označi kot spakirano',poslana:'Označi kot poslano'};
+
+  var S={tab:'orders',filter:'vse'};
+  function $(id){return document.getElementById(id);}
+
+  /* ---------- render ---------- */
+  function renderStats(){
+    var o=allOrders(), nova=0, pack=0, rev=0, lim=Date.now()-30*864e5;
+    o.forEach(function(x){ if(x.status==='nova')nova++; if(toPack(x))pack++; if(x.date>=lim)rev+=x.total; });
+    $('stats').innerHTML=
+      '<div class="stat'+(nova?' hot':'')+'"><b>'+nova+'</b><span>novih naročil</span></div>'+
+      '<div class="stat"><b>'+pack+'</b><span>čaka na pakiranje</span></div>'+
+      '<div class="stat wide"><b>'+eur(rev)+'</b><span>naročil v zadnjih 30 dneh</span></div>';
+  }
+
+  function renderChips(){
+    var o=allOrders(), c={vse:o.length};
+    ORDER.forEach(function(s){c[s]=0;}); o.forEach(function(x){c[x.status]++;});
+    var names={vse:'Vsa',nova:'Nova',placana:'Plačana',spakirana:'Spakirana',poslana:'Poslana'};
+    $('chips').innerHTML=Object.keys(names).map(function(k){
+      return '<button type="button" class="chip" data-f="'+k+'" aria-pressed="'+(S.filter===k)+'">'+names[k]+'<b>'+c[k]+'</b></button>';
+    }).join('');
+    var n=o.filter(toPack).length;
+    $('printBtn').textContent='Natisni seznam za pakiranje ('+n+')';
+    $('printBtn').disabled=!n;
+  }
+
+  function renderOrders(){
+    var o=allOrders().filter(function(x){return S.filter==='vse'||x.status===S.filter;});
+    if(!o.length){ $('orders').innerHTML='<div class="empty">V tem statusu trenutno ni naročil.</div>'; return; }
+    $('orders').innerHTML=o.map(function(x){
+      var nx=nextStatus(x);
+      var h='<article class="o'+(x.status==='nova'?' new':'')+'" data-no="'+esc(x.no)+'">';
+      h+='<div class="o-h"><span class="no">'+esc(x.no)+'</span><span class="dt">'+fmtDate(x.date)+'</span>'+(x.local?'<span class="fresh">iz naročilnice</span>':'')+
+         '<span class="pill s-'+x.status+'">'+ST[x.status]+'</span></div>';
+      h+='<p class="who">'+esc(x.name)+' <span>'+esc(x.city)+(x.country==='HR'?', Hrvaška':'')+'</span></p>';
+      h+='<ul class="items">'+x.items.map(function(i){return '<li><span>'+i.qty+' × '+esc(i.name)+', '+i.size+' ml</span><span>'+eur(i.qty*i.price)+'</span></li>';}).join('')+'</ul>';
+      h+='<div class="o-f"><span class="tot">'+eur(x.total)+'<span class="pay">'+esc(x.pay)+', poštnina '+eur(x.ship)+'</span></span>';
+      h+=nx?'<button class="btn '+(x.status==='nova'?'blue':'')+' sm" type="button" data-next="'+nx+'">'+ACTION[nx]+'</button>':'<span class="dt" style="font-size:13px;color:var(--ink-2)">Zaključeno</span>';
+      h+='</div>';
+      h+='<details><summary>Naslov in kontakt</summary><div class="addr">'+
+         '<div><b>'+esc(x.name)+'</b><br>'+esc(x.street)+'<br>'+esc(x.zip)+' '+esc(x.city)+'<br>'+(x.country==='HR'?'Hrvaška':'Slovenija')+'</div>'+
+         '<div><a href="tel:'+esc(String(x.phone).replace(/\s/g,''))+'">'+esc(x.phone)+'</a><br><a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a></div>'+
+         (x.note?'<div class="note">Opomba: '+esc(x.note)+'</div>':'')+
+         '<div><button class="btn ghost sm" type="button" data-copy>Kopiraj naslov</button></div></div></details>';
+      h+='</article>';
+      return h;
+    }).join('');
+  }
+
+  function salesMap(){
+    var m={}; allOrders().forEach(function(o){o.items.forEach(function(i){
+      if(!m[i.id]) m[i.id]={ml:0,rev:0}; m[i.id].ml+=i.size*i.qty; m[i.id].rev+=i.qty*i.price; });});
+    return m;
+  }
+  function localMl(id){var t=0; localOrders.forEach(function(o){o.items.forEach(function(i){if(i.id===id)t+=i.size*i.qty;});}); return t;}
+
+  function renderStock(){
+    var m=salesMap(), sort=$('sort').value;
+    var rows=P.map(function(p){var left=Math.max(0,p.stock-localMl(p.id)); return {p:p,left:left,s:m[p.id]||{ml:0,rev:0}};});
+    rows.sort(function(a,b){
+      if(!!a.p.isNew!==!!b.p.isNew) return a.p.isNew?-1:1;
+      if(sort==='sold') return b.s.ml-a.s.ml;
+      if(sort==='name') return a.p.name.localeCompare(b.p.name,'sl');
+      return a.left-b.left;
+    });
+    $('stock').innerHTML=rows.map(function(r){
+      var p=r.p, pct=Math.min(100,Math.round(r.left/p.bottle*100));
+      var cls=r.left<=0?' out':(r.left<=20?' low':'');
+      var flag=r.left<=0?'Razprodan'+(p.waiting?', '+p.waiting+' čaka na obvestilo':''):(r.left<=20?'Skoraj prazna, čas za novo flaško':'');
+      return '<div class="st'+cls+'"><span class="dot" style="background:'+esc(p.color)+'"></span>'+
+        '<div class="n">'+esc(p.name)+(p.isNew?'<em class="tagnew">novo</em>':'')+'<span>'+esc(p.brand)+'</span></div>'+
+        '<div class="ml">'+r.left+' ml <small>od '+p.bottle+'</small></div>'+
+        '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="sub"><span class="flag">'+flag+'</span><span>prodano '+r.s.ml+' ml, '+eur(r.s.rev)+'</span></div></div>';
+    }).join('');
+  }
+
+  function renderAll(){renderStats();renderChips();renderOrders();renderStock();}
+
+  /* ---------- events ---------- */
+  function toast(t){var el=$('toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(function(){el.hidden=true;},2200);}
+
+  document.querySelector('.tabs').addEventListener('click',function(e){
+    var b=e.target.closest('.tab'); if(!b) return; S.tab=b.dataset.tab;
+    document.querySelectorAll('.tab').forEach(function(t){t.setAttribute('aria-selected',String(t===b));});
+    ['orders','stock','add'].forEach(function(k){$('tab-'+k).hidden=k!==S.tab;});
+  });
+  $('chips').addEventListener('click',function(e){var b=e.target.closest('.chip'); if(!b) return; S.filter=b.dataset.f; renderChips(); renderOrders();});
+  $('sort').addEventListener('change',renderStock);
+
+  $('orders').addEventListener('click',function(e){
+    var art=e.target.closest('.o'); if(!art) return; var no=art.dataset.no;
+    var nb=e.target.closest('[data-next]');
+    if(nb){ statusMap[no]=nb.dataset.next; save('kb_status',statusMap); renderAll(); toast(no+': '+ST[nb.dataset.next].toLowerCase()); return; }
+    if(e.target.closest('[data-copy]')){
+      var o=allOrders().filter(function(x){return x.no===no;})[0];
+      var txt=o.name+'\n'+o.street+'\n'+o.zip+' '+o.city+'\n'+(o.country==='HR'?'Hrvaška':'Slovenija');
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast('Naslov kopiran');},function(){toast('Kopiranje ni uspelo, označi naslov ročno');}); }
+      else toast('Kopiranje ni podprto, označi naslov ročno');
+    }
+  });
+
+  $('printBtn').addEventListener('click',function(){
+    var o=allOrders().filter(toPack);
+    $('print').innerHTML='<h1>Seznam za pakiranje, '+o.length+' naročil</h1>'+o.map(function(x){
+      return '<div class="pk"><div><h2>'+esc(x.no)+'</h2>'+esc(x.name)+'<br>'+esc(x.street)+'<br>'+esc(x.zip)+' '+esc(x.city)+'<br>'+(x.country==='HR'?'Hrvaška':'Slovenija')+'<br>'+esc(x.phone)+
+        '<br><b>'+esc(x.pay)+(x.pay==='Po povzetju'?', '+eur(x.total):'')+'</b>'+(x.note?'<br><i>'+esc(x.note)+'</i>':'')+'</div>'+
+        '<ul>'+x.items.map(function(i){return '<li>'+i.qty+' × '+esc(i.name)+', '+i.size+' ml</li>';}).join('')+'</ul></div>';
+    }).join('');
+    window.print();
+  });
+
+  /* add perfume */
+  function num(id){return parseFloat(String($(id).value).replace(',','.'));}
+  function updateCalc(){
+    var b=num('bottle'),c=num('cost'),p5=num('p5'),p10=num('p10'),p20=num('p20');
+    var per=[]; if(p5>0)per.push(p5/5); if(p10>0)per.push(p10/10); if(p20>0)per.push(p20/20);
+    if(!(b>0)||!per.length){ $('calc').innerHTML='Vpiši ceno flaške in cene dekantov, pa ti izračunam, koliko ti ostane, ko je flaška razprodana.'; return; }
+    var lo=Math.min.apply(null,per)*b, hi=Math.max.apply(null,per)*b;
+    var t='Iz flaške '+b+' ml dobiš med <b>'+eur(lo)+'</b> in <b>'+eur(hi)+'</b>, odvisno od tega, katere velikosti gredo.';
+    if(c>0) t+=' Po odbitku flaške ti ostane med <b>'+eur(lo-c)+'</b> in <b>'+eur(hi-c)+'</b>.';
+    $('calc').innerHTML=t;
+  }
+  ['bottle','cost','p5','p10','p20'].forEach(function(k){$(k).addEventListener('input',updateCalc);});
+
+  $('addForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var bad=null;
+    function req(k,ok){var w=document.querySelector('[data-f="'+k+'"]'); w.classList.toggle('bad',!ok); if(!ok&&!bad) bad=$(k);}
+    req('brand',$('brand').value.trim().length>1); req('name',$('name').value.trim().length>1);
+    req('bottle',num('bottle')>0); req('p5',num('p5')>0); req('p10',num('p10')>0); req('p20',num('p20')>0);
+    if(bad){bad.focus();return;}
+    var p={id:'x'+Date.now().toString(36), brand:$('brand').value.trim(), name:$('name').value.trim(), conc:'Eau de parfum',
+      who:$('who').value, fam:$('fam').value, notes:$('notes').value.trim()||'note dodaš kasneje', wear:$('wear').value.trim()||'Opis dodaš kasneje.',
+      color:$('color').value, prices:{5:num('p5'),10:num('p10'),20:num('p20')}, stock:Math.round(num('bottle')), bottle:Math.round(num('bottle')), waiting:0, isNew:true};
+    extra.push(p); P.push(p); save('kb_extra',extra);
+    e.target.reset(); updateCalc(); renderAll();
+    document.querySelector('[data-tab="stock"]').click();
+    toast(p.name+' je shranjen in viden v naročilnici');
+  });
+
+  $('reset').addEventListener('click',function(){
+    try{localStorage.removeItem('kb_extra');localStorage.removeItem('kb_orders');localStorage.removeItem('kb_status');}catch(e){}
+    location.reload();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
