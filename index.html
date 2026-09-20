@@ -40,6 +40,11 @@ button{cursor:pointer}
 
 /* demo strip */
 .demo{background:var(--ink);color:#DDE7F6;font-size:13px;text-align:center;padding:7px 16px}
+.demo-admin{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.18)}
+.demo-admin a{display:inline-block;background:#FFF1B8;color:#3D2B00;font-weight:700;text-decoration:none;padding:3px 12px;border-radius:99px;margin-right:4px}
+.demo-admin a:hover{background:#FFE78A}
+.demo-admin a:focus-visible{outline-color:#fff}
+.demo-admin span{color:#BFD0EA}
 
 /* hero */
 .hero{background:var(--sky);color:var(--ink);padding:22px 20px 0;overflow:hidden}
@@ -232,7 +237,10 @@ footer a{color:inherit}
 </head>
 <body>
 
-<div class="demo">Demo predstavitev. Parfumi, cene in zaloga so primer, naročilo se ne pošlje nikamor.</div>
+<div class="demo">
+  <p>Demo predstavitev. Parfumi, cene in zaloga so primer, naročilo se ne pošlje nikamor.</p>
+  <p class="demo-admin"><a href="admin.html">Odpri admin za Katko</a> <span>(ta povezava je tu samo začasno, da lahko prideš v svoj program za naročila. Stranke je ne bodo videle.)</span></p>
+</div>
 
 <header class="hero">
   <div class="hero-in">
