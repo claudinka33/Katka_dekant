@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dekanti | Katka Bogataj</title>
+<meta name="description" content="Naroči dekant parfuma iz Katkine kolekcije. Izberi parfum, velikost 5, 10 ali 20 ml in oddaj naročilo.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧴</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F8FD;
+  --card:#FFFFFF;
+  --ink:#0B1B33;
+  --ink-2:#4B5D78;
+  --blue:#3F6DCF;
+  --blue-deep:#2C52A6;
+  --sky:#D9E6F6;
+  --mist:#E2ECF9;
+  --line:#CBD9EC;
+  --ok:#0B7A5C;
+  --err:#B3261E;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Hanken Grotesk","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --r-s:10px; --r-m:16px; --r-l:26px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;line-height:1.05}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* demo strip */
+.demo{background:var(--ink);color:#DDE7F6;font-size:13px;text-align:center;padding:7px 16px}
+
+/* hero */
+.hero{background:var(--sky);color:var(--ink);padding:22px 20px 0;overflow:hidden}
+.hero-in{max-width:1016px;margin:0 auto}
+.brand{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:15px}
+.brand a{color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(11,27,51,.35)}
+.brand a:hover{border-bottom-color:var(--ink)}
+.hero-grid{display:grid;gap:8px;margin-top:34px}
+.hero h1{font-size:clamp(44px,12vw,92px);font-weight:800;letter-spacing:-.04em;line-height:.92}
+.hero .lead{font-size:18px;max-width:34ch;margin-top:16px;color:#2D405C}
+.sizes{display:flex;align-items:flex-end;gap:18px;margin-top:26px;padding-bottom:0}
+.sizes figure{margin:0;display:flex;flex-direction:column;align-items:center}
+.sizes svg{display:block;height:150px;width:64px}
+.sizes figcaption{background:#fff;color:var(--ink);width:100%;text-align:center;padding:8px 6px 10px;font-size:13px;line-height:1.25;min-width:92px}
+.sizes figcaption b{display:block;font-family:var(--display);font-size:20px;letter-spacing:-.02em}
+.sizes figure:first-child figcaption{border-top-left-radius:var(--r-m)}
+.sizes figure:last-child figcaption{border-top-right-radius:var(--r-m)}
+.sizes{gap:0}
+
+/* layout */
+.wrap{max-width:1080px;margin:0 auto;padding:22px 16px 120px;display:grid;gap:28px}
+.steps{display:flex;gap:2px;list-style:none;padding:0;margin:0 -4px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
+.steps li{display:flex;align-items:center;gap:6px;padding:5px 9px 5px 5px;white-space:nowrap;border-radius:99px;background:transparent}
+.steps .n{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--mist);color:var(--ink);font-weight:700;font-size:13px}
+.steps li[aria-current="step"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.steps li[aria-current="step"] .n{background:var(--blue);color:#fff}
+.steps li.done .n{background:var(--ink);color:#fff}
+
+/* filters */
+.tools{display:grid;gap:12px}
+.search{position:relative}
+.search input{width:100%;padding:14px 16px 14px 44px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--card);font-size:16px}
+.search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink-2)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 4px;margin:0 -16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:99px;font-size:14px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips .sep{flex:none;width:1px;background:var(--line);margin:4px 4px}
+
+/* catalog */
+.list{display:grid;gap:12px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:18px 16px 16px;display:grid;grid-template-columns:64px 1fr;column-gap:14px}
+.item .vial{grid-row:1 / span 2;align-self:end;background:var(--mist);border-radius:var(--r-m);height:168px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}
+.item .vial svg{width:64px;height:150px;display:block}
+.item.pop .vial svg{animation:pop .28s ease-out}
+@keyframes pop{0%{transform:translateY(6px) scale(.96)}100%{transform:none}}
+.b{font-size:14px;color:var(--ink-2);font-weight:500}
+.item h3{font-size:24px;font-weight:700;margin-top:2px}
+.notes{font-size:14px;color:var(--ink-2);margin-top:6px}
+.wear{margin-top:8px;font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;font-size:13px;color:var(--ink-2);align-items:center}
+.tag{background:var(--mist);color:var(--ink);padding:3px 9px;border-radius:99px;font-weight:500}
+.meta a{color:var(--blue-deep);font-weight:600;text-underline-offset:3px}
+.low{color:#8A4B00;font-weight:600}
+.buy{grid-column:1 / -1;margin-top:16px;display:grid;gap:10px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.size{border:1.5px solid var(--line);background:var(--card);border-radius:var(--r-s);padding:9px 6px;text-align:center;line-height:1.2}
+.size b{display:block;font-family:var(--display);font-size:17px}
+.size span{font-size:14px;color:var(--ink-2)}
+.size[aria-pressed="true"]{border-color:var(--blue);background:var(--blue);color:#fff}
+.size[aria-pressed="true"] span{color:#E6EEFF}
+.size:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.btn{border:0;border-radius:var(--r-s);padding:14px 18px;font-weight:700;font-size:16px;background:var(--ink);color:#fff;width:100%}
+.btn:hover{background:#142a4d}
+.btn.blue{background:var(--blue)}
+.btn.blue:hover{background:var(--blue-deep)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:var(--mist)}
+.btn.added{background:var(--ok)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.item.out h3,.item.out .wear{color:var(--ink-2)}
+.item.out .vial{filter:grayscale(1);opacity:.6}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--r-l);padding:28px 20px;text-align:center;color:var(--ink-2)}
+.empty button{margin-top:10px;background:none;border:0;color:var(--blue-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* order aside */
+.order{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:20px 18px}
+.order h2{font-size:24px;font-weight:700}
+.order .hint{color:var(--ink-2);font-size:15px;margin-top:8px}
+.lines{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:12px}
+.line{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--mist)}
+.line .t{font-weight:600;line-height:1.25}
+.line .s{font-size:13px;color:var(--ink-2)}
+.line .p{font-weight:600;text-align:right;white-space:nowrap}
+.qty{justify-self:start;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:99px;padding:2px}
+.qty button{width:30px;height:30px;border-radius:50%;border:0;background:var(--mist);font-weight:700;font-size:16px;line-height:1}
+.qty button:disabled{opacity:.35;cursor:not-allowed}
+.qty output{min-width:22px;text-align:center;font-weight:600;font-size:14px}
+.sum{margin-top:14px;display:grid;gap:6px;font-size:15px}
+.sum div{display:flex;justify-content:space-between}
+.sum .tot{font-family:var(--display);font-size:24px;font-weight:700;margin-top:6px;padding-top:10px;border-top:1.5px solid var(--ink)}
+.order .btn{margin-top:16px}
+
+/* form */
+.form{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:22px 18px;display:grid;gap:16px}
+.form h2{font-size:30px;font-weight:700}
+.form .sub{color:var(--ink-2);margin-top:-8px}
+.row{display:grid;gap:16px}
+.f label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.f label small{font-weight:400;color:var(--ink-2)}
+.f input,.f select,.f textarea{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:var(--r-s);background:#fff;font-size:16px}
+.f textarea{min-height:84px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(63,109,207,.22)}
+.f.bad input,.f.bad select{border-color:var(--err)}
+.msg{color:var(--err);font-size:13px;margin-top:5px;display:none}
+.f.bad .msg,.check.bad .msg{display:block}
+fieldset{border:0;margin:0;padding:0}
+legend{font-weight:600;font-size:14px;margin-bottom:8px;padding:0}
+.pay{display:grid;gap:8px}
+.pay label{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:var(--r-s);padding:13px 14px;cursor:pointer}
+.pay label:has(input:checked){border-color:var(--blue);background:#F1F5FF}
+.pay input{margin-top:3px;accent-color:var(--blue);width:18px;height:18px;flex:none}
+.pay b{display:block}
+.pay span{font-size:14px;color:var(--ink-2)}
+.check{font-size:14px}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--blue);flex:none;margin-top:1px}
+.actions{display:grid;gap:10px}
+.back{background:none;border:0;color:var(--ink-2);font-weight:600;padding:8px;text-decoration:underline;text-underline-offset:3px}
+
+/* done */
+.done-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:30px 20px;max-width:640px;margin:0 auto;width:100%}
+.done-box .tick{width:56px;height:56px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin-bottom:18px}
+.done-box h2{font-size:clamp(34px,8vw,48px);font-weight:800;letter-spacing:-.03em}
+.done-box .no{margin-top:8px;color:var(--ink-2)}
+.done-box .no b{color:var(--ink)}
+.next{margin:22px 0 0;padding:0;list-style:none;counter-reset:n;display:grid;gap:12px}
+.next li{counter-increment:n;display:grid;grid-template-columns:28px 1fr;gap:10px}
+.next li::before{content:counter(n);width:26px;height:26px;border-radius:50%;background:var(--mist);display:grid;place-items:center;font-weight:700;font-size:13px}
+.recap{margin-top:22px;background:var(--paper);border-radius:var(--r-m);padding:16px}
+.recap ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:15px}
+.recap li{display:flex;justify-content:space-between;gap:12px}
+.recap li span:last-child{white-space:nowrap}
+.recap .tot{font-weight:700;border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+.done-box .btn{margin-top:22px}
+
+/* mobile bar */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:none;align-items:center;justify-content:space-between;gap:14px;z-index:10}
+.bar.show{display:flex}
+.bar .c{font-size:13px;color:#BFD0EA;line-height:1.2}
+.bar .c b{display:block;color:#fff;font-family:var(--display);font-size:20px}
+.bar .btn{width:auto;padding:12px 20px}
+
+footer{max-width:1080px;margin:0 auto;padding:0 16px 130px;font-size:13px;color:var(--ink-2)}
+footer a{color:inherit}
+
+[hidden]{display:none!important}
+
+@media (min-width:600px){
+  .steps{font-size:14px;gap:6px;margin:0}
+  .hero{padding:26px 32px 0}
+  .wrap{padding:28px 32px 80px}
+  .row.two{grid-template-columns:1fr 1fr}
+  .row.zip{grid-template-columns:140px 1fr}
+  .item{grid-template-columns:84px 1fr;padding:22px;column-gap:20px}
+  .item .vial{grid-row:1 / span 3}
+  .buy{grid-column:2;grid-template-columns:1fr auto;align-items:stretch}
+  .buy .btn{width:auto;min-width:212px}
+  .form{padding:30px}
+  .done-box{padding:44px}
+  footer{padding:0 32px 60px}
+}
+@media (min-width:940px){
+  .hero-grid{grid-template-columns:1fr auto;align-items:end;margin-top:48px;column-gap:40px}
+  .hero-grid > div:first-child{padding-bottom:44px}
+  .sizes{margin-top:0}
+  .wrap.cols{grid-template-columns:minmax(0,1fr) 340px;align-items:start;column-gap:32px}
+  .wrap.cols .steps{grid-column:1 / -1}
+  .order{position:sticky;top:20px}
+  .bar{display:none!important}
+  .buy{grid-template-columns:1fr}
+  .buy .btn{width:100%}
+}
+@media (min-width:1100px){
+  .buy{grid-template-columns:1fr auto}
+  .buy .btn{width:auto;min-width:212px}
+}
+@media (max-width:939px){
+  .wrap[data-step="1"] .order{display:none}
+  .wrap[data-step="2"] .order{order:2}
+  .wrap[data-step="2"] .order .go{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="demo">Demo predstavitev. Parfumi, cene in zaloga so primer, naročilo se ne pošlje nikamor.</div>
+
+<header class="hero">
+  <div class="hero-in">
+    <div class="brand">
+      <span>Katka Bogataj</span>
+      <a href="https://www.tiktok.com/@katkabogataj" target="_blank" rel="noopener">@katkabogataj na TikToku</a>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>Naroči dekant</h1>
+        <p class="lead">Parfumi iz Katkine kolekcije, pretočeni v 5, 10 ali 20 ml. Izbereš, vpišeš naslov, Katka spakira in pošlje.</p>
+      </div>
+      <div class="sizes" id="heroSizes" aria-label="Velikosti dekantov"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap cols" id="wrap" data-step="1">
+  <ol class="steps" id="steps" aria-label="Koraki naročila"></ol>
+
+  <!-- STEP 1 -->
+  <section id="step1" aria-label="Izbira parfumov">
+    <div class="tools">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr" for="q">Išči parfum ali znamko</label>
+        <input id="q" type="search" placeholder="Išči parfum ali znamko" autocomplete="off">
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filtri"></div>
+    </div>
+    <div class="list" id="list" style="margin-top:16px"></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <form class="form" id="form" novalidate hidden>
+    <h2>Kam pošljemo?</h2>
+    <p class="sub">Podatke rabimo samo za paket in obvestilo o pošiljki.</p>
+
+    <div class="row">
+      <div class="f" data-f="name">
+        <label for="name">Ime in priimek</label>
+        <input id="name" autocomplete="name">
+        <p class="msg">Vpiši ime in priimek, da pošta ve, komu je paket.</p>
+      </div>
+
+    </div>
+    <div class="row two">
+      <div class="f" data-f="email">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email">
+        <p class="msg">Email ni videti pravilen. Primer: ime@email.si</p>
+      </div>
+      <div class="f" data-f="phone">
+        <label for="phone">Telefon</label>
+        <input id="phone" type="tel" inputmode="tel" autocomplete="tel">
+        <p class="msg">Vpiši telefonsko številko, kurir jo rabi za dostavo.</p>
+      </div>
+    </div>
+    <div class="f" data-f="street">
+      <label for="street">Ulica in hišna številka</label>
+      <input id="street" autocomplete="street-address">
+      <p class="msg">Vpiši ulico in hišno številko.</p>
+    </div>
+    <div class="row zip">
+      <div class="f" data-f="zip">
+        <label for="zip">Poštna številka</label>
+        <input id="zip" inputmode="numeric" autocomplete="postal-code">
+        <p class="msg">Vpiši poštno številko.</p>
+      </div>
+      <div class="f" data-f="city">
+        <label for="city">Kraj</label>
+        <input id="city" autocomplete="address-level2">
+        <p class="msg">Vpiši kraj.</p>
+      </div>
+    </div>
+    <div class="f" data-f="country">
+      <label for="country">Država</label>
+      <select id="country" autocomplete="country">
+        <option value="SI">Slovenija (poštnina 3,90 €)</option>
+        <option value="HR">Hrvaška (poštnina 8,90 €)</option>
+      </select>
+    </div>
+
+    <fieldset>
+      <legend>Plačilo</legend>
+      <div class="pay">
+        <label><input type="radio" name="pay" value="Nakazilo na račun" checked><div><b>Nakazilo na račun</b><span>Podatke za plačilo in QR kodo dobiš na email. Paket gre na pošto, ko je plačilo vidno.</span></div></label>
+        <label><input type="radio" name="pay" value="Po povzetju"><div><b>Po povzetju</b><span>Plačaš poštarju ob prevzemu.</span></div></label>
+      </div>
+    </fieldset>
+
+    <div class="f" data-f="note">
+      <label for="note">Opomba <small>(po želji)</small></label>
+      <textarea id="note" placeholder="Npr. darilo, prosim brez računa v paketu"></textarea>
+    </div>
+
+    <div class="check" id="agreeWrap">
+      <label><input type="checkbox" id="agree"><span>Strinjam se, da se moji podatki uporabijo za obdelavo in pošiljanje tega naročila.</span></label>
+      <p class="msg">Brez tega soglasja naročila ne moremo obdelati.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn blue" type="submit" id="submitBtn">Oddaj naročilo</button>
+      <button class="back" type="button" id="backBtn">Nazaj na izbiro parfumov</button>
+    </div>
+  </form>
+
+  <!-- ORDER -->
+  <aside class="order" id="order" aria-label="Tvoje naročilo"></aside>
+
+  <!-- STEP 3 -->
+  <section class="done-box" id="done" hidden tabindex="-1"></section>
+</main>
+
+<div class="bar" id="bar">
+  <div class="c"><span id="barCount"></span><b id="barTotal"></b></div>
+  <button class="btn blue" id="barBtn" type="button">Nadaljuj na podatke</button>
+</div>
+
+<footer>
+  <p>Izdelava naročilnice: <a href="https://claudinka.si" target="_blank" rel="noopener">Claudia Studio, claudinka.si</a></p>
+</footer>
+
+<script>
+(function(){
+  /* ---------- data (demo) ---------- */
+  var TT = 'https://www.tiktok.com/@katkabogataj';
+  var P = [
+    {id:'ldbs', brand:'Kilian', name:"Love, Don't Be Shy", conc:'Eau de parfum', who:'zenski', fam:'sladki',
+     notes:'pomarančni cvet, marshmallow, vanilija', wear:'Za zmenek in večere, ko hočeš, da te vprašajo, kaj nosiš.',
+     color:'#F3B6C8', prices:{5:19,10:36,20:68}, stock:85},
+    {id:'imag', brand:'Louis Vuitton', name:'Imagination', conc:'Eau de parfum', who:'moski', fam:'svezi',
+     notes:'citrusi, črni čaj, ambroksan', wear:'Poletje, pisarna, bela majica. Čist in drag vonj brez napora.',
+     color:'#BFE3EE', prices:{5:18,10:34,20:64}, stock:70},
+    {id:'fleur', brand:'Ex Nihilo', name:'Fleur Narcotique', conc:'Eau de parfum', who:'unisex', fam:'cvetlicni',
+     notes:'liči, potonika, mošus', wear:'Vsak dan od pomladi do jeseni. Nosi ga lahko kdorkoli.',
+     color:'#F6D7DE', prices:{5:17,10:32,20:60}, stock:60},
+    {id:'inle', brand:'Memo Paris', name:'Inlé', conc:'Eau de parfum', who:'zenski', fam:'cvetlicni',
+     notes:'osmantus, jasmin, mate', wear:'Mirni dnevi, brunch, potovanja. Nežen in drugačen od vsega v drogeriji.',
+     color:'#F4E3A6', prices:{5:15,10:28,20:52}, stock:15},
+    {id:'tor21', brand:'Xerjoff', name:'Torino21', conc:'Eau de parfum', who:'unisex', fam:'svezi',
+     notes:'meta, limona, bazilika', wear:'Vročina, šport, morje. Kot hladen kozarec limonade.',
+     color:'#CDEBC4', prices:{5:14,10:26,20:48}, stock:90},
+    {id:'angel', brand:'Kilian', name:"Angels' Share", conc:'Eau de parfum', who:'unisex', fam:'sladki',
+     notes:'konjak, cimet, tonka', wear:'Jesen in zima, plašč, večerja. Topel in opazen.',
+     color:'#D9974A', prices:{5:16,10:30,20:56}, stock:0},
+    {id:'bir', brand:'Valentino', name:'Born in Roma Donna', conc:'Eau de parfum', who:'zenski', fam:'sladki',
+     notes:'črni ribez, jasmin, vanilija', wear:'Za ven s puncami. Sladek, ampak ne otročji.',
+     color:'#F2C2B8', prices:{5:8,10:14,20:26}, stock:75},
+    {id:'sauv', brand:'Dior', name:'Sauvage', conc:'Eau de parfum', who:'moski', fam:'svezi',
+     notes:'bergamotka, poper, ambroksan', wear:'Za vsak dan in vsako priložnost. Varen izbor, ki vedno dela.',
+     color:'#C9D6F2', prices:{5:7,10:13,20:24}, stock:100},
+    {id:'bois', brand:'Essential Parfums', name:'Bois Impérial', conc:'Eau de parfum', who:'unisex', fam:'lesni',
+     notes:'tajska bazilika, vetiver, akigalawood', wear:'Pisarna in vikend. Suh, zelen les, ki dolgo drži.',
+     color:'#DCCFA8', prices:{5:7,10:12,20:22}, stock:80}
+  ];
+  var WHO = {vse:'Vsi', zenski:'Ženski', moski:'Moški', unisex:'Unisex'};
+  var FAM = {sladki:'Sladki', svezi:'Sveži', cvetlicni:'Cvetlični', lesni:'Lesni'};
+  var SHIP = {SI:3.9, HR:8.9};
+  var SIZES = [5,10,20];
+
+  var S = {step:1, who:'vse', fam:null, q:'', sel:{}, cart:{}, country:'SI', notified:{}, last:null};
+  P.forEach(function(p){ S.sel[p.id]=10; });
+
+  /* ---------- helpers ---------- */
+  function $(id){return document.getElementById(id);}
+  function eur(n){return n.toFixed(2).replace('.',',')+' €';}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function byId(id){for(var i=0;i<P.length;i++) if(P[i].id===id) return P[i];}
+  function plural(n){var m=n%100; if(m===1)return 'dekant'; if(m===2)return 'dekanta'; if(m===3||m===4)return 'dekanti'; return 'dekantov';}
+  function mlInCart(id){var t=0; SIZES.forEach(function(s){t+=(S.cart[id+'|'+s]||0)*s;}); return t;}
+  function remaining(p){return p.stock-mlInCart(p.id);}
+  function cartLines(){
+    return Object.keys(S.cart).filter(function(k){return S.cart[k]>0;}).map(function(k){
+      var a=k.split('|'), p=byId(a[0]), s=+a[1];
+      return {key:k,p:p,size:s,qty:S.cart[k],total:S.cart[k]*p.prices[s]};
+    });
+  }
+  function totals(){
+    var l=cartLines(), sub=0, n=0;
+    l.forEach(function(x){sub+=x.total;n+=x.qty;});
+    var ship=n?SHIP[S.country]:0;
+    return {lines:l, sub:sub, n:n, ship:ship, total:sub+ship};
+  }
+
+  /* ---------- vial drawing ---------- */
+  function vial(color,size,onBlue){
+    var d={5:{w:22,h:46},10:{w:26,h:68},20:{w:32,h:94}}[size];
+    var W=64,bottom=144,x=(W-d.w)/2,y=bottom-d.h;
+    var capW=d.w-6,capH=24,capX=(W-capW)/2,capY=y-7-capH;
+    var liqTop=y+d.h*0.2, glass=onBlue?'rgba(255,255,255,.22)':'#fff', stroke=onBlue?'rgba(255,255,255,.85)':'#9FB4D1';
+    var cap=onBlue?'#0B1B33':'#0B1B33';
+    return '<svg viewBox="0 0 64 150" aria-hidden="true" focusable="false">'+
+      '<rect x="'+capX+'" y="'+capY+'" width="'+capW+'" height="'+capH+'" rx="3" fill="'+cap+'"/>'+
+      '<rect x="'+(capX+3)+'" y="'+(capY+3)+'" width="2" height="'+(capH-6)+'" rx="1" fill="#fff" opacity=".35"/>'+
+      '<rect x="'+(W/2-5)+'" y="'+(y-7)+'" width="10" height="8" fill="#C9D3E2"/>'+
+      '<rect x="'+x+'" y="'+y+'" width="'+d.w+'" height="'+d.h+'" rx="5" fill="'+glass+'" stroke="'+stroke+'" stroke-width="1.5"/>'+
+      '<path d="M'+(x+2.5)+' '+liqTop+'h'+(d.w-5)+'v'+(bottom-liqTop-6)+'a3.5 3.5 0 0 1-3.5 3.5h-'+(d.w-12)+'a3.5 3.5 0 0 1-3.5-3.5z" fill="'+color+'"/>'+
+      '<rect x="'+(x+4.5)+'" y="'+(y+6)+'" width="2.5" height="'+(d.h-14)+'" rx="1.25" fill="#fff" opacity=".7"/>'+
+    '</svg>';
+  }
+
+  /* ---------- renderers ---------- */
+  function renderHero(){
+    var spr={5:'pribl. 50 pršikov',10:'pribl. 100 pršikov',20:'pribl. 200 pršikov'};
+    $('heroSizes').innerHTML=SIZES.map(function(s){
+      return '<figure>'+vial('#F1D98A',s,false)+'<figcaption><b>'+s+' ml</b>'+spr[s]+'</figcaption></figure>';
+    }).join('');
+  }
+
+  function renderSteps(){
+    var names=['Izberi dekante','Tvoji podatki','Oddano'];
+    $('steps').innerHTML=names.map(function(n,i){
+      var k=i+1, cur=k===S.step, done=k<S.step;
+      return '<li'+(cur?' aria-current="step"':'')+(done?' class="done"':'')+'><span class="n">'+(done?'✓':k)+'</span>'+n+'</li>';
+    }).join('');
+  }
+
+  function renderChips(){
+    var h='';
+    Object.keys(WHO).forEach(function(k){
+      h+='<button type="button" class="chip" data-who="'+k+'" aria-pressed="'+(S.who===k)+'">'+WHO[k]+'</button>';
+    });
+    h+='<span class="sep" aria-hidden="true"></span>';
+    Object.keys(FAM).forEach(function(k){
+      h+='<button type="button" class="chip" data-fam="'+k+'" aria-pressed="'+(S.fam===k)+'">'+FAM[k]+'</button>';
+    });
+    $('chips').innerHTML=h;
+  }
+
+  function renderList(){
+    var q=S.q.trim().toLowerCase();
+    var items=P.filter(function(p){
+      if(S.who!=='vse'&&p.who!==S.who) return false;
+      if(S.fam&&p.fam!==S.fam) return false;
+      if(q&&(p.brand+' '+p.name+' '+p.notes).toLowerCase().indexOf(q)<0) return false;
+      return true;
+    });
+    if(!items.length){
+      $('list').innerHTML='<div class="empty"><p>Za ta izbor ni parfuma. Poskusi z drugim filtrom ali drugo besedo.</p><button type="button" data-reset>Pokaži vse parfume</button></div>';
+      return;
+    }
+    $('list').innerHTML=items.map(function(p){
+      var rem=remaining(p), out=p.stock<=0;
+      var sel=S.sel[p.id];
+      if(!out&&sel>rem){ sel=null; for(var i=SIZES.length-1;i>=0;i--){ if(SIZES[i]<=rem){sel=SIZES[i];break;} } S.sel[p.id]=sel; }
+      var drawSize=sel||5;
+      var h='<article class="item'+(out?' out':'')+(S.last===p.id?' pop':'')+'" data-id="'+p.id+'">';
+      h+='<div class="vial">'+vial(p.color,drawSize,false)+'</div>';
+      h+='<div><p class="b">'+esc(p.brand)+'</p><h3>'+esc(p.name)+'</h3>';
+      h+='<p class="notes">'+esc(p.conc)+', '+esc(p.notes)+'</p>';
+      h+='<p class="wear">'+esc(p.wear)+'</p>';
+      h+='<div class="meta"><span class="tag">'+WHO[p.who]+'</span><span class="tag">'+FAM[p.fam]+'</span>';
+      if(!out&&rem<=30) h+='<span class="low">'+(rem>0?'Na voljo še '+rem+' ml':'Vse je v tvojem naročilu')+'</span>';
+      h+='<a href="'+TT+'" target="_blank" rel="noopener">Poglej video</a></div></div>';
+      h+='<div class="buy">';
+      if(out){
+        h+='<p class="b" style="align-self:center">Trenutno razprodan.</p>';
+        h+=S.notified[p.id]
+          ? '<button class="btn ghost" type="button" disabled>Na seznamu čakajočih</button>'
+          : '<button class="btn ghost" type="button" data-notify>Obvesti me, ko bo spet</button>';
+      } else {
+        h+='<div class="seg" role="group" aria-label="Velikost">';
+        SIZES.forEach(function(s){
+          var dis=s>rem;
+          h+='<button type="button" class="size" data-size="'+s+'" aria-pressed="'+(sel===s)+'"'+(dis?' disabled':'')+'><b>'+s+' ml</b><span>'+eur(p.prices[s])+'</span></button>';
+        });
+        h+='</div>';
+        h+='<button class="btn" type="button" data-add'+(sel?'':' disabled')+'>'+(sel?'Dodaj v naročilo':'Ni več zaloge')+'</button>';
+      }
+      h+='</div></article>';
+      return h;
+    }).join('');
+    S.last=null;
+  }
+
+  function renderOrder(){
+    var t=totals(), h='<h2>Tvoje naročilo</h2>';
+    if(!t.n){
+      h+='<p class="hint">Naročilo je še prazno. Izberi parfum in velikost, pa se bo pokazalo tukaj.</p>';
+      if(S.step===2) h+='<button class="btn ghost" type="button" data-back>Nazaj na izbiro parfumov</button>';
+    } else {
+      h+='<ul class="lines">';
+      t.lines.forEach(function(x){
+        var canAdd=remaining(x.p)>=x.size;
+        h+='<li class="line"><div><p class="t">'+esc(x.p.name)+'</p><p class="s">'+esc(x.p.brand)+', '+x.size+' ml</p></div>'+
+           '<p class="p">'+eur(x.total)+'</p>'+
+           '<div class="qty"><button type="button" data-dec="'+x.key+'" aria-label="Odstrani en '+x.size+' ml '+esc(x.p.name)+'">−</button>'+
+           '<output>'+x.qty+'</output>'+
+           '<button type="button" data-inc="'+x.key+'"'+(canAdd?'':' disabled')+' aria-label="Dodaj še en '+x.size+' ml '+esc(x.p.name)+'">+</button></div></li>';
+      });
+      h+='</ul><div class="sum"><div><span>Dekanti ('+t.n+')</span><span>'+eur(t.sub)+'</span></div>'+
+         '<div><span>Poštnina, '+(S.country==='SI'?'Slovenija':'Hrvaška')+'</span><span>'+eur(t.ship)+'</span></div>'+
+         '<div class="tot"><span>Skupaj</span><span>'+eur(t.total)+'</span></div></div>';
+      if(S.step===1) h+='<button class="btn blue go" type="button" data-go>Nadaljuj na podatke</button>';
+    }
+    $('order').innerHTML=h;
+
+    var bar=$('bar');
+    if(S.step===1&&t.n){
+      bar.classList.add('show');
+      $('barCount').textContent=t.n+' '+plural(t.n);
+      $('barTotal').textContent=eur(t.sub);
+    } else bar.classList.remove('show');
+    $('submitBtn').disabled=!t.n;
+  }
+
+  function renderDone(o){
+    var h='<div class="tick"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>';
+    h+='<h2>Naročilo oddano</h2>';
+    h+='<p class="no">Številka naročila <b>'+o.no+'</b>. Potrditev gre na <b>'+esc(o.email)+'</b>.</p>';
+    h+='<ol class="next">';
+    if(o.pay==='Po povzetju'){
+      h+='<li>Katka pretoči in spakira tvoje dekante, običajno v 1 do 3 delovnih dneh.</li>';
+      h+='<li>Ko gre paket na pošto, dobiš email s sledilno številko.</li>';
+      h+='<li>Poštarju ob prevzemu plačaš '+eur(o.total)+'.</li>';
+    } else {
+      h+='<li>Na email dobiš podatke za nakazilo in QR kodo za '+eur(o.total)+'.</li>';
+      h+='<li>Ko je plačilo vidno, Katka pretoči in spakira tvoje dekante.</li>';
+      h+='<li>Ko gre paket na pošto, dobiš email s sledilno številko.</li>';
+    }
+    h+='</ol><div class="recap"><ul>';
+    o.lines.forEach(function(x){ h+='<li><span>'+x.qty+' × '+esc(x.p.name)+', '+x.size+' ml</span><span>'+eur(x.total)+'</span></li>'; });
+    h+='<li><span>Poštnina</span><span>'+eur(o.ship)+'</span></li>';
+    h+='<li class="tot"><span>Skupaj</span><span>'+eur(o.total)+'</span></li></ul>';
+    h+='<p class="b" style="margin-top:10px">'+esc(o.name)+', '+esc(o.street)+', '+esc(o.zip)+' '+esc(o.city)+'</p></div>';
+    h+='<button class="btn ghost" type="button" data-new>Začni novo naročilo</button>';
+    $('done').innerHTML=h;
+  }
+
+  function go(step){
+    S.step=step;
+    $('wrap').dataset.step=step;
+    $('wrap').classList.toggle('cols',step!==3);
+    $('step1').hidden=step!==1;
+    $('form').hidden=step!==2;
+    $('order').hidden=step===3;
+    $('done').hidden=step!==3;
+    renderSteps(); renderOrder();
+    if(step===1) renderList();
+    window.scrollTo({top:$('wrap').offsetTop-10});
+    if(step===2) setTimeout(function(){$('name').focus({preventScroll:true});},50);
+    if(step===3) $('done').focus({preventScroll:true});
+  }
+
+  /* ---------- events ---------- */
+  $('chips').addEventListener('click',function(e){
+    var b=e.target.closest('.chip'); if(!b) return;
+    if(b.dataset.who) S.who=b.dataset.who;
+    if(b.dataset.fam) S.fam=(S.fam===b.dataset.fam?null:b.dataset.fam);
+    renderChips(); renderList();
+  });
+  $('q').addEventListener('input',function(e){S.q=e.target.value; renderList();});
+
+  $('list').addEventListener('click',function(e){
+    if(e.target.closest('[data-reset]')){ S.who='vse';S.fam=null;S.q='';$('q').value='';renderChips();renderList();return; }
+    var art=e.target.closest('.item'); if(!art) return;
+    var id=art.dataset.id, p=byId(id);
+    var sb=e.target.closest('[data-size]');
+    if(sb&&!sb.disabled){ S.sel[id]=+sb.dataset.size; S.last=id; renderList(); var n=document.querySelector('.item[data-id="'+id+'"] [data-size="'+S.sel[id]+'"]'); if(n) n.focus(); return; }
+    if(e.target.closest('[data-notify]')){ S.notified[id]=true; renderList(); return; }
+    var ab=e.target.closest('[data-add]');
+    if(ab&&!ab.disabled){
+      var s=S.sel[id]; if(!s||s>remaining(p)) return;
+      var k=id+'|'+s; S.cart[k]=(S.cart[k]||0)+1;
+      renderList(); renderOrder();
+      var nb=document.querySelector('.item[data-id="'+id+'"] [data-add]');
+      if(nb&&!nb.disabled){ nb.textContent='Dodano v naročilo'; nb.classList.add('added'); nb.focus();
+        setTimeout(function(){ if(nb.isConnected){nb.textContent='Dodaj v naročilo'; nb.classList.remove('added');} },1300); }
+    }
+  });
+
+  $('order').addEventListener('click',function(e){
+    var inc=e.target.closest('[data-inc]'), dec=e.target.closest('[data-dec]');
+    if(inc&&!inc.disabled){ S.cart[inc.dataset.inc]++; }
+    else if(dec){ var k=dec.dataset.dec; S.cart[k]--; if(S.cart[k]<=0) delete S.cart[k]; }
+    else if(e.target.closest('[data-go]')){ go(2); return; }
+    else if(e.target.closest('[data-back]')){ go(1); return; }
+    else return;
+    renderOrder(); if(S.step===1) renderList();
+  });
+  $('barBtn').addEventListener('click',function(){go(2);});
+  $('backBtn').addEventListener('click',function(){go(1);});
+  $('country').addEventListener('change',function(e){S.country=e.target.value; renderOrder();});
+
+  var RULES={
+    name:function(v){return v.trim().split(/\s+/).length>=2;},
+    email:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());},
+    phone:function(v){return v.replace(/\D/g,'').length>=8;},
+    street:function(v){return v.trim().length>=4;},
+    zip:function(v){return /^\d{4,5}$/.test(v.trim());},
+    city:function(v){return v.trim().length>=2;}
+  };
+  function check(k){
+    var ok=RULES[k]($(k).value), w=document.querySelector('[data-f="'+k+'"]');
+    w.classList.toggle('bad',!ok); $(k).setAttribute('aria-invalid',String(!ok)); return ok;
+  }
+  Object.keys(RULES).forEach(function(k){
+    $(k).addEventListener('blur',function(){ if($(k).value) check(k); });
+    $(k).addEventListener('input',function(){ if(document.querySelector('[data-f="'+k+'"]').classList.contains('bad')) check(k); });
+  });
+  $('agree').addEventListener('change',function(){ if($('agree').checked) $('agreeWrap').classList.remove('bad'); });
+
+  $('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var t=totals(); if(!t.n) return;
+    var first=null;
+    Object.keys(RULES).forEach(function(k){ if(!check(k)&&!first) first=$(k); });
+    if(!$('agree').checked){ $('agreeWrap').classList.add('bad'); if(!first) first=$('agree'); }
+    if(first){ first.focus(); return; }
+    var o={no:'KB-'+(2000+Math.floor(Math.random()*7999)), email:$('email').value.trim(), name:$('name').value.trim(),
+      street:$('street').value.trim(), zip:$('zip').value.trim(), city:$('city').value.trim(),
+      pay:document.querySelector('input[name="pay"]:checked').value, lines:t.lines, ship:t.ship, total:t.total};
+    renderDone(o);
+    /* V pravi verziji se naročilo tukaj pošlje na strežnik (baza + email Katki in stranki). */
+    go(3);
+  });
+
+  $('done').addEventListener('click',function(e){
+    if(!e.target.closest('[data-new]')) return;
+    S.cart={}; $('form').reset(); S.country='SI';
+    document.querySelectorAll('.bad').forEach(function(n){n.classList.remove('bad');});
+    go(1);
+  });
+
+  /* ---------- init ---------- */
+  renderHero(); renderSteps(); renderChips(); renderList(); renderOrder();
+})();
+</script>
+</body>
+</html>
